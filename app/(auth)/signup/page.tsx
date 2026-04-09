@@ -1,0 +1,47 @@
+import Link from 'next/link';
+import { signup } from './actions';
+
+export default function SignupPage({ searchParams }: { searchParams: { error?: string } }) {
+  return (
+    <main className="mx-auto flex min-h-screen max-w-md flex-col justify-center px-6">
+      <Link href="/" className="mb-8 flex items-center gap-2">
+        <div className="h-7 w-7 rounded-md bg-brand" />
+        <span className="text-lg font-semibold">JusFlow</span>
+      </Link>
+      <h1 className="text-2xl font-semibold tracking-tight">Criar conta grátis</h1>
+      <p className="mt-1 text-sm text-slate-600">Leva menos de 2 minutos.</p>
+
+      {searchParams.error && (
+        <div className="mt-6 rounded-md border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-800">
+          {searchParams.error}
+        </div>
+      )}
+
+      <form action={signup} className="mt-8 space-y-4">
+        <div>
+          <label className="text-sm font-medium text-slate-700">Nome do escritório</label>
+          <input name="orgName" required minLength={2}
+            className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand" />
+        </div>
+        <div>
+          <label className="text-sm font-medium text-slate-700">Email</label>
+          <input name="email" type="email" required autoComplete="email"
+            className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand" />
+        </div>
+        <div>
+          <label className="text-sm font-medium text-slate-700">Senha</label>
+          <input name="password" type="password" required minLength={12} autoComplete="new-password"
+            className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand" />
+          <p className="mt-1 text-xs text-slate-500">Mínimo 12 caracteres.</p>
+        </div>
+        <button type="submit" className="w-full rounded-md bg-brand px-4 py-2.5 text-sm font-medium text-white hover:bg-brand-700">
+          Criar conta
+        </button>
+      </form>
+
+      <p className="mt-6 text-center text-sm text-slate-600">
+        Já tem conta? <Link href="/login" className="font-medium text-brand hover:underline">Entrar</Link>
+      </p>
+    </main>
+  );
+}
