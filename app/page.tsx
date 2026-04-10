@@ -1,12 +1,13 @@
 import Link from 'next/link';
+import { Scale, Shield, Clock, Users, FileText, Wallet, Lock } from 'lucide-react';
 
 export default function Landing() {
   return (
     <main className="mx-auto max-w-6xl px-6 py-24">
       <nav className="mb-20 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <div className="h-8 w-8 rounded-md bg-brand" />
-          <span className="text-xl font-semibold tracking-tight">JusFlow</span>
+          <Scale className="h-7 w-7 text-brand" />
+          <span className="text-xl font-semibold tracking-tight text-brand">RaiseAdv</span>
         </div>
         <div className="flex items-center gap-4 text-sm">
           <Link href="/login" className="text-slate-600 hover:text-slate-900">Entrar</Link>
@@ -18,10 +19,10 @@ export default function Landing() {
 
       <section className="max-w-3xl">
         <p className="mb-4 text-sm font-medium uppercase tracking-wider text-gold">
-          Software jurídico · Moderno · Acessível
+          Software jurídico moderno e acessível
         </p>
         <h1 className="text-5xl font-bold leading-tight tracking-tight text-slate-900 md:text-6xl">
-          Seu escritório jurídico, <span className="text-brand">em fluxo.</span>
+          Seu escritório jurídico, <span className="text-brand">sob controle.</span>
         </h1>
         <p className="mt-6 text-lg text-slate-600">
           Processos, prazos, clientes e financeiro em um só lugar. Sem complicação, sem contrato
@@ -38,15 +39,16 @@ export default function Landing() {
       </section>
 
       <section id="recursos" className="mt-24 grid gap-6 md:grid-cols-3">
-        {[
-          { t: 'Processos', d: 'Cadastre pelo número CNJ e acompanhe a timeline completa.' },
-          { t: 'Prazos & Agenda', d: 'Nunca perca um prazo. Alertas automáticos por email.' },
-          { t: 'Clientes & Documentos', d: 'CRM jurídico completo com documentos criptografados.' },
-          { t: 'Financeiro', d: 'Honorários, contas a receber e relatórios simples.' },
-          { t: 'Multi-usuário', d: 'Convide sua equipe com permissões granulares.' },
-          { t: 'Seguro por padrão', d: 'LGPD-ready. Dados criptografados e isolamento total.' },
-        ].map((f) => (
+        {([
+          { t: 'Processos', d: 'Cadastre pelo número CNJ e acompanhe a timeline completa.', icon: FileText },
+          { t: 'Prazos & Agenda', d: 'Nunca perca um prazo. Alertas automáticos por email.', icon: Clock },
+          { t: 'Clientes & Documentos', d: 'CRM jurídico completo com documentos criptografados.', icon: Users },
+          { t: 'Financeiro', d: 'Honorários, contas a receber e relatórios simples.', icon: Wallet },
+          { t: 'Multi-usuário', d: 'Convide sua equipe com permissões granulares.', icon: Shield },
+          { t: 'Seguro por padrão', d: 'LGPD-ready. Dados criptografados e isolamento total.', icon: Lock },
+        ] as const).map((f) => (
           <div key={f.t} className="rounded-xl border border-slate-200 bg-white p-6">
+            <f.icon className="mb-3 h-5 w-5 text-brand" />
             <h3 className="font-semibold text-slate-900">{f.t}</h3>
             <p className="mt-2 text-sm text-slate-600">{f.d}</p>
           </div>
@@ -54,7 +56,7 @@ export default function Landing() {
       </section>
 
       <footer className="mt-24 flex flex-col items-start justify-between gap-4 border-t border-slate-200 pt-8 text-sm text-slate-500 md:flex-row md:items-center">
-        <span>© {new Date().getFullYear()} JusFlow. Feito para advogados que valorizam seu tempo.</span>
+        <span>&copy; {new Date().getFullYear()} RaiseAdv. Feito para advogados que valorizam seu tempo.</span>
         <div className="flex gap-4">
           <Link href="/legal/termos" className="hover:text-slate-900">Termos de uso</Link>
           <Link href="/legal/privacidade" className="hover:text-slate-900">Privacidade (LGPD)</Link>

@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-export const metadata = { title: 'Termos de Uso — JusFlow' };
+export const metadata = { title: 'Termos de Uso — RaiseAdv' };
 
 export default function TermosPage() {
   return (
@@ -19,7 +19,7 @@ export default function TermosPage() {
 
       <h2>2. Natureza do serviço</h2>
       <p>
-        O JusFlow é ferramenta de apoio à gestão de escritórios jurídicos. <strong>Não
+        O RaiseAdv é ferramenta de apoio à gestão de escritórios jurídicos. <strong>Não
         substitui</strong> o julgamento profissional do advogado. Cálculos de prazos, resumos,
         sugestões e consultas a bases públicas são auxiliares — a conferência final é
         responsabilidade exclusiva do usuário, conforme art. 32 da Lei 8.906/1994.
@@ -60,7 +60,7 @@ export default function TermosPage() {
 
       <h2>7. Propriedade intelectual</h2>
       <p>
-        O código-fonte, marca, layout e design do JusFlow são de propriedade exclusiva da
+        O código-fonte, marca, layout e design do RaiseAdv são de propriedade exclusiva da
         empresa. Os <strong>dados inseridos pelo usuário</strong> permanecem de sua propriedade
         e podem ser exportados a qualquer momento.
       </p>

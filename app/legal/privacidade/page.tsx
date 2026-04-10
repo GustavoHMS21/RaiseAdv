@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-export const metadata = { title: 'Política de Privacidade — JusFlow' };
+export const metadata = { title: 'Política de Privacidade — RaiseAdv' };
 
 export default function PrivacidadePage() {
   return (
@@ -11,7 +11,7 @@ export default function PrivacidadePage() {
 
       <h2>1. Quem somos</h2>
       <p>
-        O JusFlow é um software jurídico fornecido em modelo SaaS. Esta política descreve como
+        O RaiseAdv é um software jurídico fornecido em modelo SaaS. Esta política descreve como
         coletamos, usamos, armazenamos e protegemos dados pessoais, em conformidade com a
         <strong> Lei Geral de Proteção de Dados (Lei nº 13.709/2018 — LGPD)</strong>, o
         <strong> Marco Civil da Internet (Lei nº 12.965/2014)</strong>, e o
@@ -35,7 +35,7 @@ export default function PrivacidadePage() {
 
       <h2>4. Sigilo profissional</h2>
       <p>
-        Os dados de processos e clientes hospedados no JusFlow são protegidos pelo sigilo
+        Os dados de processos e clientes hospedados no RaiseAdv são protegidos pelo sigilo
         profissional do advogado (art. 7º, II do EAOAB). Nossa equipe não acessa o conteúdo de
         processos, exceto mediante solicitação expressa de suporte ou ordem judicial.
       </p>
@@ -61,12 +61,12 @@ export default function PrivacidadePage() {
         <li>Informações sobre compartilhamento.</li>
       </ul>
       <p>
-        Para exercer: <a href="mailto:dpo@jusflow.app">dpo@jusflow.app</a>. Prazo de resposta: 15
+        Para exercer: <a href="mailto:dpo@raiseadv.com.br">dpo@raiseadv.com.br</a>. Prazo de resposta: 15
         dias (art. 19 LGPD).
       </p>
 
       <h2>7. Encarregado de dados (DPO)</h2>
-      <p>Contato: <a href="mailto:dpo@jusflow.app">dpo@jusflow.app</a></p>
+      <p>Contato: <a href="mailto:dpo@raiseadv.com.br">dpo@raiseadv.com.br</a></p>
 
       <h2>8. Retenção</h2>
       <p>

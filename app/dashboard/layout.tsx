@@ -1,6 +1,8 @@
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { Sidebar } from '@/components/dashboard/sidebar';
+import { LgpdConsentBanner } from './lgpd-consent';
+import { checkLgpdConsent } from './lgpd-actions';
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   const supabase = createClient();
@@ -27,6 +29,8 @@ export default async function DashboardLayout({ children }: { children: React.Re
     );
   }
 
+  const hasConsent = await checkLgpdConsent(user.id);
+
   return (
     <div className="flex min-h-screen">
       <Sidebar
@@ -36,6 +40,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
       <main className="flex-1 bg-slate-50">
         <div className="mx-auto max-w-6xl px-6 py-8">{children}</div>
       </main>
+      <LgpdConsentBanner needsConsent={!hasConsent} />
     </div>
   );
 }

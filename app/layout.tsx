@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'JusFlow — Software jurídico moderno',
-  description: 'Gestão de processos, prazos e clientes para advogados autônomos e escritórios pequenos.',
+  title: 'RaiseAdv — Software jurídico moderno',
+  description: 'Gestão de processos, prazos e clientes para advogados autônomos e escritórios pequenos. Alternativa acessível ao Astrea.',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

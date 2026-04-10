@@ -1,9 +1,18 @@
 'use server';
 import { redirect } from 'next/navigation';
+import { headers } from 'next/headers';
 import { createClient } from '@/lib/supabase/server';
 import { signupSchema } from '@/lib/validators';
+import { rateLimit } from '@/lib/rate-limit';
 
 export async function signup(formData: FormData) {
+  // Rate limit: 3 signups por IP a cada 60s
+  const ip = headers().get('x-forwarded-for')?.split(',')[0]?.trim() ?? 'unknown';
+  const { allowed } = rateLimit(`signup:${ip}`, { limit: 3, windowMs: 60_000 });
+  if (!allowed) {
+    redirect('/signup?error=Muitas+tentativas.+Aguarde+1+minuto.');
+  }
+
   const parsed = signupSchema.safeParse({
     email: String(formData.get('email') ?? ''),
     password: String(formData.get('password') ?? ''),

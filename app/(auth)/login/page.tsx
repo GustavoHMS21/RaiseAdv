@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { Scale } from 'lucide-react';
 import { login } from './actions';
 
 export default function LoginPage({
@@ -14,8 +15,8 @@ export default function LoginPage({
   return (
     <main className="mx-auto flex min-h-screen max-w-md flex-col justify-center px-6">
       <Link href="/" className="mb-8 flex items-center gap-2">
-        <div className="h-7 w-7 rounded-md bg-brand" />
-        <span className="text-lg font-semibold">JusFlow</span>
+        <Scale className="h-6 w-6 text-brand" />
+        <span className="text-lg font-semibold tracking-tight text-brand">RaiseAdv</span>
       </Link>
       <h1 className="text-2xl font-semibold tracking-tight">Entrar</h1>
       <p className="mt-1 text-sm text-slate-600">Acesse sua conta.</p>
