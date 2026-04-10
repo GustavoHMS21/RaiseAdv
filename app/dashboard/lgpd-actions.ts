@@ -2,6 +2,7 @@
 
 import { createClient } from '@/lib/supabase/server';
 import { type ActionResult } from '@/lib/actions';
+import { logAccess } from '@/lib/access-log';
 
 const CURRENT_TERMS_VERSION = 'v1.0';
 
@@ -40,6 +41,8 @@ export async function acceptLgpdConsent(): Promise<ActionResult> {
     console.error('[lgpd-consent]', error.message);
     return { success: false, error: 'Erro ao salvar consentimento' };
   }
+
+  await logAccess({ userId: user.id, action: 'data_create', resource: 'lgpd_consents', metadata: { version: CURRENT_TERMS_VERSION } });
 
   return { success: true };
 }

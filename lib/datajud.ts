@@ -4,9 +4,7 @@
  * Docs: https://datajud-wiki.cnj.jus.br/api-publica/
  *
  * Cada tribunal tem seu próprio endpoint Elasticsearch.
- * Autenticação: header Authorization com chave pública do CNJ:
- *   APIKey cDZHYzlZa0JadVREZDJCendQbXY6SkJlTzNjLV9TRENyQk1RdnFKZGRQdw==
- * (chave pode ser rotacionada; manter em env var).
+ * Autenticação via env var DATAJUD_API_KEY (nunca hardcoded).
  */
 
 export type DataJudHit = {
@@ -54,12 +52,11 @@ export class DataJudError extends Error {
 }
 
 function getApiKey(): string {
-  // Chave pública oficial do CNJ — pode ser rotacionada.
-  // Prioriza env var, fallback na chave documentada.
-  return (
-    process.env.DATAJUD_API_KEY ||
-    'cDZHYzlZa0JadVREZDJCendQbXY6SkJlTzNjLV9TRENyQk1RdnFKZGRQdw=='
-  );
+  const key = process.env.DATAJUD_API_KEY;
+  if (!key) {
+    throw new DataJudError('DATAJUD_API_KEY não configurada. Defina no .env.local');
+  }
+  return key;
 }
 
 /**

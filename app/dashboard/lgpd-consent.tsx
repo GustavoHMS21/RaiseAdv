@@ -22,25 +22,33 @@ export function LgpdConsentBanner({ needsConsent }: { needsConsent: boolean }) {
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
       <div className="mx-4 max-w-lg rounded-xl border border-slate-200 bg-white p-8 shadow-2xl">
         <h2 className="text-xl font-semibold text-slate-900">
-          Consentimento de Dados — LGPD
+          Termos de Uso e Proteção de Dados — LGPD
         </h2>
         <p className="mt-3 text-sm leading-relaxed text-slate-600">
-          Para utilizar o RaiseAdv, precisamos do seu consentimento para o tratamento de dados
-          pessoais conforme a <strong>Lei Geral de Proteção de Dados (Lei 13.709/2018)</strong>.
+          Antes de continuar, leia como o RaiseAdv trata seus dados pessoais conforme a{' '}
+          <strong>Lei Geral de Proteção de Dados (Lei 13.709/2018)</strong>. O tratamento dos
+          seus dados essenciais é baseado na execução do contrato e obrigações legais — não
+          depende de consentimento. O consentimento abaixo é necessário apenas para
+          comunicações opcionais de marketing.
         </p>
 
         <div className="mt-4 rounded-lg bg-slate-50 p-4 text-xs leading-relaxed text-slate-600">
-          <p className="font-medium text-slate-800">Dados que coletamos e tratamos:</p>
+          <p className="font-medium text-slate-800">Base legal para tratamento de dados (art. 7º LGPD):</p>
           <ul className="mt-2 list-disc space-y-1 pl-4">
-            <li>Email e dados de autenticação (art. 7º, I — execução do contrato)</li>
-            <li>Dados de clientes e processos que você cadastrar (art. 7º, V — legítimo interesse)</li>
-            <li>Logs de acesso para segurança e auditoria (art. 7º, IX — prevenção à fraude)</li>
+            <li><strong>Execução de contrato (art. 7º, V):</strong> email, autenticação, dados de clientes e processos que você cadastrar, cálculos de prazos, controle financeiro</li>
+            <li><strong>Cumprimento de obrigação legal (art. 7º, II):</strong> logs de acesso (Marco Civil art. 15), registros fiscais, prova de consentimento</li>
+            <li><strong>Exercício regular de direitos (art. 7º, VI):</strong> gestão de processos judiciais</li>
           </ul>
-          <p className="mt-3 font-medium text-slate-800">Seus direitos (art. 18):</p>
+          <p className="mt-3 font-medium text-slate-800">Consentimento específico (art. 7º, I):</p>
+          <ul className="mt-2 list-disc space-y-1 pl-4">
+            <li>Comunicações de marketing opcionais (newsletters) — revogável a qualquer momento</li>
+          </ul>
+          <p className="mt-3 font-medium text-slate-800">Seus direitos (art. 18 LGPD):</p>
           <ul className="mt-2 list-disc space-y-1 pl-4">
             <li>Acesso, correção e exclusão dos seus dados</li>
-            <li>Portabilidade (exportar seus dados em JSON)</li>
-            <li>Revogar consentimento a qualquer momento</li>
+            <li>Portabilidade (exportar todos os dados em JSON via painel ou API)</li>
+            <li>Revogar consentimento de marketing a qualquer momento</li>
+            <li>Contato DPO: dpo@raiseadv.com.br</li>
           </ul>
         </div>
 

@@ -4,6 +4,7 @@ import { headers } from 'next/headers';
 import { createClient } from '@/lib/supabase/server';
 import { signupSchema } from '@/lib/validators';
 import { rateLimit } from '@/lib/rate-limit';
+import { logAccess } from '@/lib/access-log';
 
 export async function signup(formData: FormData) {
   // Rate limit: 3 signups por IP a cada 60s
@@ -34,6 +35,8 @@ export async function signup(formData: FormData) {
     console.error('[signup]', error.message);
     redirect(`/signup?error=${encodeURIComponent(error.message)}`);
   }
+
+  await logAccess({ userId: data.user?.id, action: 'login', metadata: { type: 'signup' } });
 
   // Supabase com "Confirm email" ativo retorna user mas sem session.
   if (!data.session) {

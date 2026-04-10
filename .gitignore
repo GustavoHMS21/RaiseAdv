@@ -3,19 +3,40 @@ node_modules/
 out/
 build/
 dist/
+
+# === SECURITY: NUNCA commitar secrets ===
 .env
+.env.*
 .env.local
 .env*.local
 .env.development
 .env.production
+.env.staging
+*.pem
+*.key
+*.p12
+*.pfx
+credentials.json
+service-account.json
+secrets/
+
+# logs
 *.log
 npm-debug.log*
+
+# os
 .DS_Store
 Thumbs.db
+
+# editor
 .vercel
 .vscode/
 .idea/
+
+# build
 *.tsbuildinfo
 next-env.d.ts
+
+# supabase local
 supabase/.branches
 supabase/.temp

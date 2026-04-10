@@ -4,6 +4,7 @@ import { headers } from 'next/headers';
 import { createClient } from '@/lib/supabase/server';
 import { loginSchema } from '@/lib/validators';
 import { rateLimit } from '@/lib/rate-limit';
+import { logAccess } from '@/lib/access-log';
 
 export async function login(formData: FormData) {
   // Rate limit: 5 tentativas por IP a cada 60s
@@ -20,10 +21,11 @@ export async function login(formData: FormData) {
   if (!parsed.success) redirect('/login?error=Credenciais+inv%C3%A1lidas');
 
   const supabase = createClient();
-  const { error } = await supabase.auth.signInWithPassword(parsed.data);
+  const { data, error } = await supabase.auth.signInWithPassword(parsed.data);
   if (error) {
     console.error('[login]', error.message);
     redirect('/login?error=Email+ou+senha+incorretos');
   }
+  await logAccess({ userId: data.user?.id, action: 'login' });
   redirect('/dashboard');
 }
