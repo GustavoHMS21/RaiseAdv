@@ -1,0 +1,27 @@
+Contact: mailto:security@raiseadv.com.br
+Contact: mailto:dpo@raiseadv.com.br
+Expires: 2027-04-11T00:00:00.000Z
+Preferred-Languages: pt-BR, en
+Canonical: https://raiseadv.com.br/.well-known/security.txt
+Policy: https://raiseadv.com.br/legal/privacidade
+Acknowledgments: https://raiseadv.com.br/security/hall-of-fame
+
+# RaiseAdv — Programa de Divulgação Responsável
+#
+# Se você descobriu uma vulnerabilidade de segurança no RaiseAdv,
+# por favor reporte de forma responsável via security@raiseadv.com.br
+#
+# Comprometemo-nos a:
+# - Responder em até 48 horas úteis
+# - Tratar a divulgação com confidencialidade
+# - Creditar pesquisadores que reportarem vulnerabilidades válidas
+# - Não tomar ações legais contra pesquisas de boa-fé
+#
+# Escopo:
+# - raiseadv.com.br e subdomínios
+# - APIs públicas (/api/*)
+#
+# Fora do escopo:
+# - Engenharia social
+# - DDoS / volumetric attacks
+# - Vulnerabilidades em dependências de terceiros já reportadas

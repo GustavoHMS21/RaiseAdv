@@ -5,6 +5,7 @@ import { createClient } from '@/lib/supabase/server';
 import { signupSchema } from '@/lib/validators';
 import { rateLimit } from '@/lib/rate-limit';
 import { logAccess } from '@/lib/access-log';
+import { checkPasswordStrength } from '@/lib/password-strength';
 
 export async function signup(formData: FormData) {
   // Rate limit: 3 signups por IP a cada 60s
@@ -22,6 +23,15 @@ export async function signup(formData: FormData) {
   if (!parsed.success) {
     const msg = parsed.error.issues[0]?.message ?? 'invalid';
     redirect(`/signup?error=${encodeURIComponent(msg)}`);
+  }
+
+  // Validação de força de senha (NIST SP 800-63B)
+  const strength = checkPasswordStrength(parsed.data.password, [
+    parsed.data.email,
+    parsed.data.orgName,
+  ]);
+  if (!strength.valid) {
+    redirect(`/signup?error=${encodeURIComponent(strength.errors[0] ?? 'Senha fraca')}`);
   }
 
   const supabase = createClient();
