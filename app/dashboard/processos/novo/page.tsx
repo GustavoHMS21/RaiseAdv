@@ -3,6 +3,7 @@ import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
 import { caseSchema } from '@/lib/validators';
+import { logAccess } from '@/lib/access-log';
 
 function s(v: FormDataEntryValue | null): string | null {
   if (v === null) return null;
@@ -35,15 +36,16 @@ async function create(formData: FormData) {
   const { data: member } = await supabase.from('members').select('organization_id').eq('user_id', user.id).maybeSingle();
   if (!member) redirect('/login');
 
-  const { error } = await supabase.from('cases').insert({
+  const { data: created, error } = await supabase.from('cases').insert({
     ...parsed.data,
     organization_id: member.organization_id,
     created_by: user.id,
-  });
+  }).select('id').single();
   if (error) {
     console.error('[processos/novo]', error.message);
     redirect('/dashboard/processos/novo?error=' + encodeURIComponent(error.message));
   }
+  await logAccess({ userId: user.id, action: 'data_create', resource: 'cases', resourceId: created?.id });
   revalidatePath('/dashboard/processos');
   redirect('/dashboard/processos');
 }

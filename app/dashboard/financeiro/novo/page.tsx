@@ -3,6 +3,7 @@ import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
 import { financeSchema } from '@/lib/validators';
+import { logAccess } from '@/lib/access-log';
 
 function s(v: FormDataEntryValue | null): string | null {
   if (v === null) return null;
@@ -32,7 +33,7 @@ async function create(formData: FormData) {
   const { data: member } = await supabase.from('members').select('organization_id').eq('user_id', user.id).maybeSingle();
   if (!member) redirect('/login');
 
-  const { error } = await supabase.from('finance_entries').insert({
+  const { data: created, error } = await supabase.from('finance_entries').insert({
     organization_id: member.organization_id,
     kind: parsed.data.kind,
     description: parsed.data.description,
@@ -42,11 +43,12 @@ async function create(formData: FormData) {
     case_id: parsed.data.case_id || null,
     client_id: parsed.data.client_id || null,
     created_by: user.id,
-  });
+  }).select('id').single();
   if (error) {
     console.error('[financeiro/novo]', error.message);
     redirect('/dashboard/financeiro/novo?error=' + encodeURIComponent(error.message));
   }
+  await logAccess({ userId: user.id, action: 'data_create', resource: 'finance_entries', resourceId: created?.id, metadata: { kind: parsed.data.kind } });
   revalidatePath('/dashboard/financeiro');
   redirect('/dashboard/financeiro');
 }

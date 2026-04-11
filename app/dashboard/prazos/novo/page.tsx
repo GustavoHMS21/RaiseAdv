@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
 import { deadlineSchema } from '@/lib/validators';
 import { addBusinessDays, addCalendarDays, DEADLINE_PRESETS } from '@/lib/deadlines';
+import { logAccess } from '@/lib/access-log';
 import DeadlineCalcClient from './calc-client';
 
 function s(v: FormDataEntryValue | null): string | null {
@@ -54,7 +55,7 @@ async function create(formData: FormData) {
   const { data: member } = await supabase.from('members').select('organization_id').eq('user_id', user.id).maybeSingle();
   if (!member) redirect('/login');
 
-  const { error } = await supabase.from('events').insert({
+  const { data: created, error } = await supabase.from('events').insert({
     organization_id: member.organization_id,
     case_id: parsed.data.case_id,
     title: parsed.data.title,
@@ -67,11 +68,12 @@ async function create(formData: FormData) {
     business_days_only: parsed.data.business_days_only,
     notes: parsed.data.notes,
     created_by: user.id,
-  });
+  }).select('id').single();
   if (error) {
     console.error('[prazos/novo]', error.message);
     redirect('/dashboard/prazos/novo?error=' + encodeURIComponent(error.message));
   }
+  await logAccess({ userId: user.id, action: 'data_create', resource: 'events', resourceId: created?.id, metadata: { kind: 'deadline' } });
   revalidatePath('/dashboard/prazos');
   revalidatePath('/dashboard');
   redirect('/dashboard/prazos');
