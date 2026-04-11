@@ -57,9 +57,12 @@ export default function Landing() {
 
       <footer className="mt-24 flex flex-col items-start justify-between gap-4 border-t border-slate-200 pt-8 text-sm text-slate-500 md:flex-row md:items-center">
         <span>&copy; {new Date().getFullYear()} RaiseAdv. Feito para advogados que valorizam seu tempo.</span>
-        <div className="flex gap-4">
+        <div className="flex flex-wrap gap-4">
           <Link href="/legal/termos" className="hover:text-slate-900">Termos de uso</Link>
           <Link href="/legal/privacidade" className="hover:text-slate-900">Privacidade (LGPD)</Link>
+          <Link href="/legal/ropa" className="hover:text-slate-900">ROPA</Link>
+          <a href="/.well-known/security.txt" className="hover:text-slate-900">Segurança</a>
+          <a href="mailto:dpo@raiseadv.com.br" className="hover:text-slate-900">DPO</a>
         </div>
       </footer>
     </main>

@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Briefcase, Users, Calendar, Wallet, LayoutDashboard, LogOut, AlertTriangle, Scale } from 'lucide-react';
+import { Briefcase, Users, Calendar, Wallet, LayoutDashboard, LogOut, AlertTriangle, Scale, Settings } from 'lucide-react';
 
 interface SidebarProps {
   orgName: string | undefined;
@@ -13,6 +13,7 @@ const nav = [
   { href: '/dashboard/clientes', label: 'Clientes', icon: Users },
   { href: '/dashboard/agenda', label: 'Agenda', icon: Calendar },
   { href: '/dashboard/financeiro', label: 'Financeiro', icon: Wallet },
+  { href: '/dashboard/configuracoes', label: 'Configurações', icon: Settings },
 ];
 
 export function Sidebar({ orgName, userEmail }: SidebarProps) {
