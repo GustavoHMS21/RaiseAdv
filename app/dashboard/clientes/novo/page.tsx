@@ -1,46 +1,34 @@
 import Link from 'next/link';
-import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
 import { clientSchema } from '@/lib/validators';
 import { logAccess } from '@/lib/access-log';
-
-function s(v: FormDataEntryValue | null): string | null {
-  if (v === null) return null;
-  const str = typeof v === 'string' ? v.trim() : '';
-  return str === '' ? null : str;
-}
+import { getAuthContext } from '@/lib/actions';
+import { formStr } from '@/lib/utils';
 
 async function create(formData: FormData) {
   'use server';
   const parsed = clientSchema.safeParse({
-    type: s(formData.get('type')),
-    name: s(formData.get('name')),
-    document: s(formData.get('document')),
-    email: s(formData.get('email')),
-    phone: s(formData.get('phone')),
-    address: s(formData.get('address')),
-    notes: s(formData.get('notes')),
+    type: formStr(formData.get('type')),
+    name: formStr(formData.get('name')),
+    document: formStr(formData.get('document')),
+    email: formStr(formData.get('email')),
+    phone: formStr(formData.get('phone')),
+    address: formStr(formData.get('address')),
+    notes: formStr(formData.get('notes')),
   });
   if (!parsed.success) {
-    console.error('[clients/novo]', parsed.error.issues);
     redirect('/dashboard/clientes/novo?error=Dados+inv%C3%A1lidos');
   }
 
-  const supabase = createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) redirect('/login');
-
-  const { data: member } = await supabase.from('members').select('organization_id').eq('user_id', user.id).maybeSingle();
-  if (!member) redirect('/login');
+  const { supabase, user, orgId } = await getAuthContext();
 
   const { data: created, error } = await supabase.from('clients').insert({
     ...parsed.data,
-    organization_id: member.organization_id,
+    organization_id: orgId,
     created_by: user.id,
   }).select('id').single();
   if (error) {
-    console.error('[clients/novo]', error.message);
     redirect('/dashboard/clientes/novo?error=' + encodeURIComponent(error.message));
   }
   await logAccess({ userId: user.id, action: 'data_create', resource: 'clients', resourceId: created?.id });

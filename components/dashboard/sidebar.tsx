@@ -1,5 +1,9 @@
+'use client';
+
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { Briefcase, Users, Calendar, Wallet, LayoutDashboard, LogOut, AlertTriangle, Scale, Settings } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 interface SidebarProps {
   orgName: string | undefined;
@@ -17,6 +21,8 @@ const nav = [
 ];
 
 export function Sidebar({ orgName, userEmail }: SidebarProps) {
+  const pathname = usePathname();
+
   return (
     <aside className="hidden w-64 flex-col border-r border-slate-200 bg-white md:flex">
       <div className="flex h-16 items-center gap-2 border-b border-slate-200 px-6">
@@ -24,16 +30,26 @@ export function Sidebar({ orgName, userEmail }: SidebarProps) {
         <span className="text-lg font-semibold tracking-tight text-brand">RaiseAdv</span>
       </div>
       <nav className="flex-1 space-y-1 p-3">
-        {nav.map(({ href, label, icon: Icon }) => (
-          <Link
-            key={href}
-            href={href}
-            className="flex items-center gap-3 rounded-md px-3 py-2 text-sm text-slate-700 transition-colors hover:bg-slate-100"
-          >
-            <Icon className="h-4 w-4" />
-            {label}
-          </Link>
-        ))}
+        {nav.map(({ href, label, icon: Icon }) => {
+          const isActive = href === '/dashboard'
+            ? pathname === '/dashboard'
+            : pathname.startsWith(href);
+          return (
+            <Link
+              key={href}
+              href={href}
+              className={cn(
+                'flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-colors',
+                isActive
+                  ? 'bg-brand-50 font-medium text-brand'
+                  : 'text-slate-700 hover:bg-slate-100',
+              )}
+            >
+              <Icon className="h-4 w-4" />
+              {label}
+            </Link>
+          );
+        })}
       </nav>
       <div className="border-t border-slate-200 p-4">
         <p className="text-xs text-slate-500">{orgName ?? 'Meu Escritório'}</p>

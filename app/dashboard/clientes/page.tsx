@@ -21,7 +21,25 @@ export default async function ClientesPage() {
         </Link>
       </div>
 
-      <div className="mt-6 overflow-hidden rounded-xl border border-slate-200 bg-white">
+      {/* Mobile: card layout */}
+      <div className="mt-6 space-y-3 md:hidden">
+        {clients && clients.length > 0 ? clients.map((c) => (
+          <div key={c.id} className="rounded-xl border border-slate-200 bg-white p-4 space-y-1">
+            <p className="font-medium text-slate-900">{c.name}</p>
+            <p className="text-xs uppercase text-slate-500">{c.type}</p>
+            {c.document && <p className="font-mono text-xs text-slate-600">{c.document}</p>}
+            {c.email && <p className="text-sm text-slate-600">{c.email}</p>}
+            {c.phone && <p className="text-sm text-slate-600">{c.phone}</p>}
+          </div>
+        )) : (
+          <div className="rounded-xl border border-dashed border-slate-300 px-5 py-10 text-center text-sm text-slate-500">
+            Nenhum cliente. <Link href="/dashboard/clientes/novo" className="text-brand hover:underline">Cadastrar o primeiro →</Link>
+          </div>
+        )}
+      </div>
+
+      {/* Desktop: table layout */}
+      <div className="mt-6 hidden overflow-hidden rounded-xl border border-slate-200 bg-white md:block">
         <table className="w-full text-sm">
           <thead className="bg-slate-50 text-left text-xs uppercase tracking-wider text-slate-500">
             <tr>

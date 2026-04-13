@@ -166,7 +166,8 @@ create table if not exists jusflow.lgpd_consents (
   privacy_version text not null,
   accepted_at timestamptz not null default now(),
   ip inet,
-  user_agent text
+  user_agent text,
+  constraint lgpd_consents_user_version_uq unique (user_id, terms_version)
 );
 
 -- =========================================================

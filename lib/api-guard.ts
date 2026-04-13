@@ -9,11 +9,17 @@ import { rateLimit } from '@/lib/rate-limit';
  * Retorna { user, supabase } ou NextResponse de erro.
  */
 export async function apiGuard(opts?: { rateKey?: string; limit?: number }) {
-  // CSRF: same-origin check
+  // CSRF: strict same-origin check (parse URL to prevent subdomain bypass)
   const h = headers();
   const origin = h.get('origin') ?? h.get('referer') ?? '';
   const host = h.get('host') ?? '';
-  if (!origin.includes(host)) {
+  let originHost = '';
+  try {
+    originHost = new URL(origin).host;
+  } catch {
+    // malformed origin — reject
+  }
+  if (!host || originHost !== host) {
     return { error: new NextResponse('Forbidden', { status: 403 }) };
   }
 

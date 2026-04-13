@@ -4,37 +4,28 @@ import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
 import { financeSchema } from '@/lib/validators';
 import { logAccess } from '@/lib/access-log';
-
-function s(v: FormDataEntryValue | null): string | null {
-  if (v === null) return null;
-  const str = typeof v === 'string' ? v.trim() : '';
-  return str === '' ? null : str;
-}
+import { getAuthContext } from '@/lib/actions';
+import { formStr } from '@/lib/utils';
 
 async function create(formData: FormData) {
   'use server';
   const parsed = financeSchema.safeParse({
-    kind: s(formData.get('kind')),
-    description: s(formData.get('description')),
+    kind: formStr(formData.get('kind')),
+    description: formStr(formData.get('description')),
     amount_reais: Number(String(formData.get('amount_reais') ?? '0').replace(',', '.')),
-    due_date: s(formData.get('due_date')),
-    paid_at: s(formData.get('paid_at')),
-    case_id: s(formData.get('case_id')),
-    client_id: s(formData.get('client_id')),
+    due_date: formStr(formData.get('due_date')),
+    paid_at: formStr(formData.get('paid_at')),
+    case_id: formStr(formData.get('case_id')),
+    client_id: formStr(formData.get('client_id')),
   });
   if (!parsed.success) {
-    console.error('[financeiro/novo]', parsed.error.issues);
     redirect('/dashboard/financeiro/novo?error=Dados+inv%C3%A1lidos');
   }
 
-  const supabase = createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) redirect('/login');
-  const { data: member } = await supabase.from('members').select('organization_id').eq('user_id', user.id).maybeSingle();
-  if (!member) redirect('/login');
+  const { supabase, user, orgId } = await getAuthContext();
 
   const { data: created, error } = await supabase.from('finance_entries').insert({
-    organization_id: member.organization_id,
+    organization_id: orgId,
     kind: parsed.data.kind,
     description: parsed.data.description,
     amount_cents: Math.round(parsed.data.amount_reais * 100),
@@ -45,7 +36,6 @@ async function create(formData: FormData) {
     created_by: user.id,
   }).select('id').single();
   if (error) {
-    console.error('[financeiro/novo]', error.message);
     redirect('/dashboard/financeiro/novo?error=' + encodeURIComponent(error.message));
   }
   await logAccess({ userId: user.id, action: 'data_create', resource: 'finance_entries', resourceId: created?.id, metadata: { kind: parsed.data.kind } });

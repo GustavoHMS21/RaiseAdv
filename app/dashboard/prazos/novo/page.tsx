@@ -5,20 +5,16 @@ import { revalidatePath } from 'next/cache';
 import { deadlineSchema } from '@/lib/validators';
 import { addBusinessDays, addCalendarDays, DEADLINE_PRESETS } from '@/lib/deadlines';
 import { logAccess } from '@/lib/access-log';
+import { getAuthContext } from '@/lib/actions';
+import { formStr } from '@/lib/utils';
 import DeadlineCalcClient from './calc-client';
-
-function s(v: FormDataEntryValue | null): string | null {
-  if (v === null) return null;
-  const str = typeof v === 'string' ? v.trim() : '';
-  return str === '' ? null : str;
-}
 
 async function create(formData: FormData) {
   'use server';
-  const sourceDate = s(formData.get('source_date'));
+  const sourceDate = formStr(formData.get('source_date'));
   const days = Number(formData.get('days') ?? 0);
   const businessDaysOnly = formData.get('business_days_only') === 'on';
-  let startsAt = s(formData.get('starts_at')) ?? '';
+  let startsAt = formStr(formData.get('starts_at')) ?? '';
 
   // Fonte da verdade: recalcular no servidor.
   if (sourceDate && days > 0) {
@@ -32,31 +28,26 @@ async function create(formData: FormData) {
   if (!startsAt) redirect('/dashboard/prazos/novo?error=Informe+a+data+base+e+os+dias');
 
   const parsed = deadlineSchema.safeParse({
-    title: s(formData.get('title')),
+    title: formStr(formData.get('title')),
     kind: 'deadline',
-    case_id: s(formData.get('case_id')),
-    deadline_type: s(formData.get('deadline_type')),
+    case_id: formStr(formData.get('case_id')),
+    deadline_type: formStr(formData.get('deadline_type')),
     source_date: sourceDate,
     days,
     business_days_only: businessDaysOnly,
     starts_at: startsAt,
-    priority: s(formData.get('priority')) ?? 'high',
+    priority: formStr(formData.get('priority')) ?? 'high',
     is_legal_deadline: true,
-    notes: s(formData.get('notes')),
+    notes: formStr(formData.get('notes')),
   });
   if (!parsed.success) {
-    console.error('[prazos/novo]', parsed.error.issues);
     redirect('/dashboard/prazos/novo?error=Dados+inv%C3%A1lidos');
   }
 
-  const supabase = createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) redirect('/login');
-  const { data: member } = await supabase.from('members').select('organization_id').eq('user_id', user.id).maybeSingle();
-  if (!member) redirect('/login');
+  const { supabase, user, orgId } = await getAuthContext();
 
   const { data: created, error } = await supabase.from('events').insert({
-    organization_id: member.organization_id,
+    organization_id: orgId,
     case_id: parsed.data.case_id,
     title: parsed.data.title,
     kind: 'deadline',
@@ -70,7 +61,6 @@ async function create(formData: FormData) {
     created_by: user.id,
   }).select('id').single();
   if (error) {
-    console.error('[prazos/novo]', error.message);
     redirect('/dashboard/prazos/novo?error=' + encodeURIComponent(error.message));
   }
   await logAccess({ userId: user.id, action: 'data_create', resource: 'events', resourceId: created?.id, metadata: { kind: 'deadline' } });

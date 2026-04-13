@@ -4,45 +4,35 @@ import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
 import { caseSchema } from '@/lib/validators';
 import { logAccess } from '@/lib/access-log';
-
-function s(v: FormDataEntryValue | null): string | null {
-  if (v === null) return null;
-  const str = typeof v === 'string' ? v.trim() : '';
-  return str === '' ? null : str;
-}
+import { getAuthContext } from '@/lib/actions';
+import { formStr } from '@/lib/utils';
 
 async function create(formData: FormData) {
   'use server';
   const valorNum = Number(String(formData.get('value_reais') ?? '0').replace(',', '.'));
   const parsed = caseSchema.safeParse({
-    title: s(formData.get('title')),
-    cnj_number: s(formData.get('cnj_number')),
-    client_id: s(formData.get('client_id')),
-    court: s(formData.get('court')),
-    area: s(formData.get('area')),
-    status: s(formData.get('status')) ?? 'active',
-    opposing_party: s(formData.get('opposing_party')),
+    title: formStr(formData.get('title')),
+    cnj_number: formStr(formData.get('cnj_number')),
+    client_id: formStr(formData.get('client_id')),
+    court: formStr(formData.get('court')),
+    area: formStr(formData.get('area')),
+    status: formStr(formData.get('status')) ?? 'active',
+    opposing_party: formStr(formData.get('opposing_party')),
     value_cents: Number.isFinite(valorNum) ? Math.round(valorNum * 100) : 0,
-    notes: s(formData.get('notes')),
+    notes: formStr(formData.get('notes')),
   });
   if (!parsed.success) {
-    console.error('[processos/novo]', parsed.error.issues);
     redirect('/dashboard/processos/novo?error=Dados+inv%C3%A1lidos');
   }
 
-  const supabase = createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) redirect('/login');
-  const { data: member } = await supabase.from('members').select('organization_id').eq('user_id', user.id).maybeSingle();
-  if (!member) redirect('/login');
+  const { supabase, user, orgId } = await getAuthContext();
 
   const { data: created, error } = await supabase.from('cases').insert({
     ...parsed.data,
-    organization_id: member.organization_id,
+    organization_id: orgId,
     created_by: user.id,
   }).select('id').single();
   if (error) {
-    console.error('[processos/novo]', error.message);
     redirect('/dashboard/processos/novo?error=' + encodeURIComponent(error.message));
   }
   await logAccess({ userId: user.id, action: 'data_create', resource: 'cases', resourceId: created?.id });

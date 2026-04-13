@@ -38,7 +38,6 @@ export async function acceptLgpdConsent(): Promise<ActionResult> {
     );
 
   if (error) {
-    console.error('[lgpd-consent]', error.message);
     return { success: false, error: 'Erro ao salvar consentimento' };
   }
 

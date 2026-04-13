@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { Scale } from 'lucide-react';
 import { signup } from './actions';
+import { PasswordInput } from './password-strength';
 
 export default function SignupPage({ searchParams }: { searchParams: { error?: string } }) {
   return (
@@ -29,12 +30,7 @@ export default function SignupPage({ searchParams }: { searchParams: { error?: s
           <input name="email" type="email" required autoComplete="email"
             className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand" />
         </div>
-        <div>
-          <label className="text-sm font-medium text-slate-700">Senha</label>
-          <input name="password" type="password" required minLength={12} autoComplete="new-password"
-            className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand" />
-          <p className="mt-1 text-xs text-slate-500">Mínimo 12 caracteres.</p>
-        </div>
+        <PasswordInput />
         <button type="submit" className="w-full rounded-md bg-brand px-4 py-2.5 text-sm font-medium text-white hover:bg-brand-700">
           Criar conta
         </button>
